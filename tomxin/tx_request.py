@@ -68,28 +68,45 @@ def post_encoding(url, values, encoding):
 当需要传输的数据是json格式的时候使用
 '''
 def post_json(url, value):
-    # json串数据使用
     value = json.dumps(value).encode(encoding='utf-8')
-    header_dict = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Trident/7.0; rv:11.0) like Gecko',"Content-Type": "application/json"}
-    req = request.Request(url=url,data=value,headers=header_dict)
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Trident/7.0; rv:11.0) like Gecko',"Content-Type": "application/json"}
+    req = request.Request(url=url,data=value,headers=headers)
     res = request.urlopen(req)
     res = res.read()
-    return (res.decode('utf-8'))
+    return res.decode(encoding='utf-8')
 
-# def post(url, value, )
-# textmod={"jsonrpc": "2.0","method":"user.login","params":{"user":"admin","password":"zabbix"},"auth": None,"id":1}
-# #json串数据使用
-# textmod = json.dumps(textmod).encode(encoding='utf-8')
-# #普通数据使用
-# textmod = parse.urlencode(textmod).encode(encoding='utf-8')
-# print(textmod)
-# #输出内容:b'{"params": {"user": "admin", "password": "zabbix"}, "auth": null, "method": "user.login", "jsonrpc": "2.0", "id": 1}'
-# header_dict = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Trident/7.0; rv:11.0) like Gecko',"Content-Type": "application/json"}
-# url='http://192.168.199.10/api_jsonrpc.php'
-# req = request.Request(url=url,data=textmod,headers=header_dict)
-# res = request.urlopen(req)
-# res = res.read()
-# print(res)
-# #输出内容:b'{"jsonrpc":"2.0","result":"37d991fd583e91a0cfae6142d8d59d7e","id":1}'
-# print(res.decode(encoding='utf-8'))
-# #输出内容:{"jsonrpc":"2.0","result":"37d991fd583e91a0cfae6142d8d59d7e","id":1}
+'''
+当需要传输的数据是json格式的时候使用
+url = 'http://jobsky.csu.edu.cn/Home/PartialArticleList'
+values = {
+    'pageindex': '1',
+    'pagesize': '15',
+    'typeid':'4',
+    'followingdates':'-1'
+}
+'''
+def post_json_headers(url, value, headers):
+    value = json.dumps(value).encode(encoding='utf-8')
+    #普通数据使用
+    req = request.Request(url=url,data=value,headers=headers)
+    res = request.urlopen(req)
+    res = res.read()
+    return res.decode(encoding='utf-8')
+
+'''
+当需要传输的数据是json格式的时候使用
+url = 'http://jobsky.csu.edu.cn/Home/PartialArticleList'
+values = {
+    'pageindex': '1',
+    'pagesize': '15',
+    'typeid':'4',
+    'followingdates':'-1'
+}
+headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Trident/7.0; rv:11.0) like Gecko',"Content-Type": "application/json"}
+'''
+def post_headers(url, value, headers):
+    value = parse.urlencode(value).encode(encoding='utf-8')
+    req = request.Request(url=url,data=value,headers=headers)
+    res = request.urlopen(req)
+    res = res.read()
+    return res.decode(encoding='utf-8')
