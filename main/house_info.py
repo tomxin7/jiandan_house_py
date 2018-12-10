@@ -38,7 +38,12 @@ def getHoustList(url):
     return houseList
 
 
-    # for house in houseList:
-    #     if "鼓楼" in house.content or "鼓楼" in house.title:
-    #         print(house.title)
-    #         print(house.url)
+'''
+查询
+'''
+def getHouse(url_num):
+    url_num = url_num.split(",")
+    houstList = []
+    for url in url_num:
+        houstList += getHoustList("https://www.douban.com/group/"+url)
+    return houstList
