@@ -6,8 +6,15 @@ db_passwd = "@"
 db_name = ""
 db_charset = "utf8"
 
+'''
+   for row in results:
+      fname = row[0]
+      lname = row[1]
+      age = row[2]
+      sex = row[3]
+      income = row[4]
+'''
 def select(selectSql):
-    # 查询数据库中是否已经有了
     db = pymysql.connect(user = db_user, passwd = db_passwd, host = db_host, db = db_name, charset = db_charset)
     cursor = db.cursor()
     cursor.execute(selectSql)
@@ -35,6 +42,9 @@ def insertUnique(selectSql, insertSql):
     # 关闭数据库连接
     db.close()
 
+'''
+写操作
+'''
 def operate(insertSql):
     db = pymysql.connect(user = db_user, passwd = db_passwd, host = db_host, db = db_name, charset = db_charset)
     cursor = db.cursor()
