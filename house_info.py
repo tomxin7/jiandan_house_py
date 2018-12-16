@@ -29,7 +29,11 @@ def getHoustList(url):
     urlList = tomxin.tx_re.get_list(info,'class="title".+?"','"')
     i=0
     houseList = []
-    for url in urlList[:]:
+    for url in urlList[:15]:
+        #如果是pl，代表是置顶的推广
+        if url == "pl":
+            i += 1
+            continue
         conten = getDetils(url)
         house = House(title= titleList[i], url= url, content=conten)
         houseList.append(house)
