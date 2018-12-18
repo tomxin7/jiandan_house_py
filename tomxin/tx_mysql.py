@@ -1,6 +1,6 @@
 import pymysql
 
-db_host = ""
+db_host = "sql..cn"
 db_user = ""
 db_passwd = "@"
 db_name = ""
@@ -34,7 +34,7 @@ def insertUnique(selectSql, insertSql):
     cursor = db.cursor()
     cursor.execute(selectSql)
     row = cursor.fetchone()
-    if row == None:  # 如果数据库中没有相同记录，执行插入
+    if len(row) == 0:  # 如果数据库中没有相同记录，执行插入
         # 执行sql语句
         cursor.execute(insertSql)
         # 提交到数据库执行

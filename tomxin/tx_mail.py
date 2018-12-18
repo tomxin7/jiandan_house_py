@@ -24,8 +24,9 @@ smtpPort  # 开放的端口
 sqm  # 在登录smtp时需要login中的密码应当使用授权码而非账户密码
 '''
 mailList = []
-# mailList.append(Mail('@163.com', 'smtp.163.com', '25', ''))
-
+mailList.append(Mail('13450452462@163.com', 'smtp.163.com', '25', 'xing8023'))
+mailList.append(Mail('1341749898@qq.com', 'smtp.qq.com', '25', 'khciyxpskxrcjbfj'))
+mailList.append(Mail('13450452462@qq.com', 'smtp.qq.com', '25', 'jhhybxgsqzuadeec'))
 
 
 
