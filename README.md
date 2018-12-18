@@ -22,5 +22,5 @@
 
 ## 项目地址
 - 后端源码：https://github.com/tomxin7/jiandan_house
-- 爬虫源码：https://github.com/tomxin7/jiandan_house_py
+- 前端源码：https://github.com/tomxin7/jiandan_house_web
 
