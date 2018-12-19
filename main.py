@@ -3,7 +3,9 @@ import house_info
 import house_record
 import user_info
 import time
+import traceback
 import urllib
+import tomxin.tx_time
 
 def houst_main():
     print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + "开始爬取")
@@ -30,16 +32,32 @@ def houst_main():
         print("晚上10点，程序开始休眠")
         time.sleep(60*60*9)
 
+retry_num = 3  # 重试次数
+sleep_time = 30  # 休息时间（单位分钟）
+project_name = "简单找房"  # 项目名称
+error_num = 0
 if __name__ == '__main__':
-    print("【简单找房】启动成功")
-    while(1):
+    print(tomxin.tx_time.now_time() + "【" + project_name + "】启动成功")
+    while (1):
         try:
             houst_main()
+            error_num = 0
         except Exception as e:
-            message = "【严重 简单找房】爬虫已结束运行，错误码为：" + str(e)
+            message = "【严重 {project_name}】系统出现第{error_num}次异常，休息{sleep_time}分钟后重试，具体请查看日志：{log_code}，错误码为：" + str(e)
+            if retry_num == error_num:
+                message = "【严重 {project_name}】系统出现第{error_num}次异常，项目重试次数上限，已经退出程序，错误码为：" + str(e)
+            message = message.replace("{project_name}", project_name)
+            message = message.replace("{sleep_time}", str(sleep_time))
+            message = message.replace("{error_num}", str(error_num + 1))
+            message = message.replace("{log_code}", str(int(time.time())))
+            print(tomxin.tx_time.now_time() + message)
+            print(traceback.format_exc())
             message = urllib.parse.quote(message)
             url = "http://wxmsg.dingliqc.com/send?msg=" + message + "&userIds=orPQ808n2X4vtf-1cIihSnbHqisoITWXlbsk3I"
             tomxin.tx_request.get(url)
-            exit("程序已退出，错误码："+ str(e))
+            if retry_num == error_num:
+                exit()
+            time.sleep(sleep_time * 60)
+            error_num = error_num + 1
 
 
