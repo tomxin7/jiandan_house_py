@@ -23,9 +23,9 @@ def houst_main():
 
         # 对比租房信息和用户设置的key
         user_info.check_info(houstList, recordList)
-    print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + "爬取成功，休息10分钟")
+    print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + "爬取成功，休息15分钟")
     #休息30分钟
-    time.sleep(30 * 60)
+    time.sleep(15 * 60)
 
     #晚上10点后不再监控
     if str(time.strftime('%H', time.localtime())) == "22":
