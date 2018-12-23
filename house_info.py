@@ -1,6 +1,8 @@
 import tomxin.tx_re
 import tomxin.tx_request
 import time
+import tomxin.tx_mysql
+import tomxin.tx_time
 
 
 class House(object):
@@ -17,15 +19,19 @@ class House(object):
 '''
 获取详情
 '''
+
+
 def getDetils(url):
     html = tomxin.tx_request.get(url)
-    content = tomxin.tx_re.get_first(html, 'Conversation.+?text": "', '"name": "')
+    content = tomxin.tx_re.get_first_html_foram(html, 'Conversation.+?text": "', '"name": "')
     return content
 
 
 '''
 获取信息列表
 '''
+
+
 def getHoustList(url):
     html = tomxin.tx_request.get(url)
     info = tomxin.tx_re.get_first(html, '<table class="olt">', '</table>')
@@ -38,11 +44,29 @@ def getHoustList(url):
         if url == "pl":
             i += 1
             continue
-        conten = getDetils(url)
-        house = House(title=titleList[i], url=url, content=conten)
+        # 先去查询这条数据是不是被爬取过了
+        id = url[-10:-1]
+        sql = "select content from house where id = '{id}'"
+        sql = sql.replace("{id}", id)
+        row = tomxin.tx_mysql.select(sql)
+        if (len(row) == 0):
+            content = getDetils(url)
+            sql = "INSERT INTO house (id, title, url, content, add_time) VALUES ('{id}', '{title}','{url}', '{content}', '{add_time}')"
+            sql = sql.replace("{id}", id)
+            sql = sql.replace("{title}", titleList[i])
+            sql = sql.replace("{url}", url)
+            sql = sql.replace("{content}", content)
+            sql = sql.replace("{add_time}", tomxin.tx_time.now_time())
+            try:
+                tomxin.tx_mysql.operate(sql)
+            except Exception as e:
+                print(e)
+        else:
+            content = row[0]
+        house = House(title=titleList[i], url=url, content=content)
         houseList.append(house)
         # 每一次要休息一会
-        time.sleep(5)
+        time.sleep(8)
         i += 1
     return houseList
 
@@ -50,6 +74,8 @@ def getHoustList(url):
 '''
 查询
 '''
+
+
 def getHouse(url_num):
     url_num = url_num.split(",")
     houstList = []

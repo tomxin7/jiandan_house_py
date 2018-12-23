@@ -1,4 +1,5 @@
 import pymysql
+import tomxin.tx_time
 
 db_host = "sql..cn"
 db_user = ""
@@ -15,13 +16,21 @@ db_charset = "utf8"
       income = row[4]
 '''
 def select(selectSql):
-    db = pymysql.connect(user = db_user, passwd = db_passwd, host = db_host, db = db_name, charset = db_charset)
-    cursor = db.cursor()
-    cursor.execute(selectSql)
-    row = cursor.fetchall()
-    # 关闭数据库连接
-    db.close()
-    return row
+    try:
+        db = pymysql.connect(user=db_user, passwd=db_passwd, host=db_host, db=db_name, charset=db_charset)
+        cursor = db.cursor()
+        cursor.execute(selectSql)
+        row = cursor.fetchall()
+    except Exception as e:
+        print(tomxin.tx_time.now_time() + "【查询数据出错】exception SQL：" + selectSql)
+        raise e
+    else:
+        return row
+    finally:
+        # 关闭数据库连接
+        db.close()
+
+
 
 '''
 插入不重复的数据
@@ -46,12 +55,17 @@ def insertUnique(selectSql, insertSql):
 写操作
 '''
 def operate(insertSql):
-    db = pymysql.connect(user = db_user, passwd = db_passwd, host = db_host, db = db_name, charset = db_charset)
-    cursor = db.cursor()
-    # 执行sql语句
-    cursor.execute(insertSql)
-    # 提交到数据库执行
-    db.commit()
-    # 关闭数据库连接
-    db.close()
+    try:
+        db = pymysql.connect(user=db_user, passwd=db_passwd, host=db_host, db=db_name, charset=db_charset)
+        cursor = db.cursor()
+        # 执行sql语句
+        cursor.execute(insertSql)
+        # 提交到数据库执行
+        db.commit()
+    except Exception as e:
+        print(tomxin.tx_time.now_time() + "【操作数据出错】exception SQL：" + insertSql)
+        raise e
+    finally:
+        # 关闭数据库连接
+        db.close()
 
