@@ -22,6 +22,23 @@ def get(url):
         raise e#抛出这个异常
 
 '''
+有代理ip的get请求
+'''
+def get_proxy(url,ip):
+    try:
+        proxy = {'https': ip}
+        proxy_support = request.ProxyHandler(proxy)
+        opener = request.build_opener(proxy_support)
+        opener.addheaders = [('User-Agent',
+                              'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36')]
+        request.install_opener(opener)
+        response = request.urlopen(url)
+        return response.read().decode("utf-8")
+    except Exception as e:
+        print(tomxin.tx_time.now_time() + "【get请求异常】get_proxy(url,ip) url：%s  ip:%s"  %(url, ip))
+        raise e#抛出这个异常
+
+'''
 自定义编码格式的请求
 '''
 def get_encoding(url, encoding):
@@ -34,6 +51,22 @@ def get_encoding(url, encoding):
         return oper.read().decode(encoding)
     except Exception as e:
         print(tomxin.tx_time.now_time() + "【get请求异常】get_encoding(url, encoding) url：%s  encoding:%s"  %(url, encoding))
+        raise e#抛出这个异常
+
+'''
+带请求头的get请求
+headers={
+            "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0"}
+'''
+def get_headers(url, headers):
+    try:
+        timeout = 30  # 这里是设置超时时间
+        socket.setdefaulttimeout(timeout)
+        req = urllib.request.Request(url, headers=headers)
+        oper = urllib.request.urlopen(req)
+        return oper.read().decode("utf-8")
+    except Exception as e:
+        print(tomxin.tx_time.now_time() + "【get请求异常】get_headers(url, headers) url：%s  headers:%s"  %(url, headers))
         raise e#抛出这个异常
 '''
 post请求

@@ -16,13 +16,23 @@ class House(object):
         self.content = content
 
 
+#2、按行读取并存为list
+def open_txt_list(path):
+    file_object = open(path,"r", encoding='utf-8')
+    txt_list=[]
+    try:
+        for line in file_object:
+            txt_list.append(str(line).replace("\n",""))
+    finally:
+        file_object.close()
+    return txt_list
+
+
 '''
 获取详情
 '''
-
-
-def getDetils(url):
-    html = tomxin.tx_request.get(url)
+def getDetils(url, ip):
+    html = tomxin.tx_request.get_proxy(url, ip)
     content = tomxin.tx_re.get_first_html_foram(html, 'Conversation.+?text": "', '"name": "')
     return content
 
@@ -33,13 +43,15 @@ def getDetils(url):
 
 
 def getHoustList(url):
-    html = tomxin.tx_request.get(url)
+    ip_list = open_txt_list("ip.txt")
+    ip = ip_list[0]
+    html = tomxin.tx_request.get_proxy(url, ip)
     info = tomxin.tx_re.get_first(html, '<table class="olt">', '</table>')
     titleList = tomxin.tx_re.get_list(info, 'title="', '"')
     urlList = tomxin.tx_re.get_list(info, 'class="title".+?"', '"')
     i = 0
     houseList = []
-    for url in urlList[:]:
+    for url in urlList[:15]:
         # 如果是pl，代表是置顶的推广
         if url == "pl":
             i += 1
@@ -50,7 +62,7 @@ def getHoustList(url):
         sql = sql.replace("{id}", id)
         row = tomxin.tx_mysql.select(sql)
         if (len(row) == 0):
-            content = getDetils(url)
+            content = getDetils(url,ip)
             sql = "INSERT INTO house (id, title, url, content, add_time) VALUES ('{id}', '{title}','{url}', '{content}', '{add_time}')"
             sql = sql.replace("{id}", id)
             sql = sql.replace("{title}", titleList[i])
@@ -66,7 +78,7 @@ def getHoustList(url):
         house = House(title=titleList[i], url=url, content=content)
         houseList.append(house)
         # 每一次要休息一会
-        time.sleep(8)
+        time.sleep(3)
         i += 1
     return houseList
 

@@ -6,6 +6,41 @@ import time
 import traceback
 import urllib
 import tomxin.tx_time
+import tomxin.tx_proxy_ip
+import tomxin.ipp
+
+
+#写txt
+def line_write_txt(path, result):
+    with open(path, "w", encoding="utf-8") as f:
+        for r in result:
+            f.write(r + "\n")
+
+
+#2、按行读取并存为list
+def open_txt_list(path):
+    file_object = open(path,"r", encoding='utf-8')
+    txt_list=[]
+    try:
+        for line in file_object:
+            txt_list.append(str(line).replace("\n",""))
+    finally:
+        file_object.close()
+    return txt_list
+
+'''
+判断代理ip还有没有，如果有，那么删除第一个
+'''
+def judge_proxy_ip():
+    path = "ip.txt"
+    ip_list = open_txt_list(path)
+    if len(ip_list) == 0 or len(ip_list)  == 1:
+        tomxin.ipp.getip("https://www.douban.com/group/shanghaizufang", "ip.txt")
+    else:
+        del ip_list[0]
+        line_write_txt(path, ip_list)
+        print("代理ip切换成功   当前ip：%s    可用ip数量：%s："%(ip_list[0],len(ip_list)))
+
 
 def houst_main():
     print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + "开始爬取")
@@ -15,8 +50,16 @@ def houst_main():
         city = row[0]
         url_num = row[1]
 
-        # 爬取租房信息
-        houstList = house_info.getHouse(url_num)
+        #切换代理ip
+        judge_proxy_ip()
+
+        print(tomxin.tx_time.now_time() + city +"  开始爬取")
+        try:
+            # 爬取租房信息
+            houstList = house_info.getHouse(url_num)
+        except Exception as e:
+            print(tomxin.tx_time.now_time() + city + "被中断，错误码： " + str(e))
+            continue
 
         # 查询改城市需要判断的用户记录
         recordList = house_record.get_record(city)
@@ -24,24 +67,29 @@ def houst_main():
         # 对比租房信息和用户设置的key
         user_info.check_info(houstList, recordList)
 
-        print(tomxin.tx_time.now_time() + city +" 爬取成功")
-    print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + "爬取成功，休息8分钟")
-    #休息30分钟
-    time.sleep(8 * 60)
+        print(tomxin.tx_time.now_time() + city +"  爬取成功")
+    print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + "爬取成功，休息4分钟")
+    #休息4分钟
+    time.sleep(4 * 60)
 
     #晚上10点后不再监控
     if str(time.strftime('%H', time.localtime())) == "22":
         print("晚上10点，程序开始休眠")
         time.sleep(60*60*9)
 
+
+
 retry_num = 3  # 重试次数
-sleep_time = 30  # 休息时间（单位分钟）
+sleep_time = 5  # 休息时间（单位分钟）
 project_name = "简单找房"  # 项目名称
 error_num = 0
 if __name__ == '__main__':
     print(tomxin.tx_time.now_time() + "【" + project_name + "】启动成功")
+    #清空ip.txt
+    line_write_txt("ip.txt", [])
     while (1):
         try:
+
             houst_main()
             error_num = 0
         except Exception as e:
