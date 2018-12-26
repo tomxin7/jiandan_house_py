@@ -40,7 +40,7 @@ def getDetils(url):
             html = tomxin.tx_request.get_proxy(url, ip)
             break
         except Exception as e:
-            print("抓取信息详情发生异常，准备重试，错误码：  " + str(e))
+            print("抓取信息详情发生异常，准备切换ip")
             tomxin.tx_proxy_ip.judge_proxy_ip(url)
     content = tomxin.tx_re.get_first_html_foram(html, 'Conversation.+?text": "', '"name": "')
     return content
@@ -59,7 +59,7 @@ def getHoustList(url):
             html = tomxin.tx_request.get_proxy(url, ip)
             break
         except Exception as e:
-            print("抓取列表信息发生异常，准备重试，错误码：  " + str(e))
+            print("抓取列表信息发生异常，准备切换ip")
             tomxin.tx_proxy_ip.judge_proxy_ip(url)
     info = tomxin.tx_re.get_first(html, '<table class="olt">', '</table>')
     titleList = tomxin.tx_re.get_list(info, 'title="', '"')
@@ -87,7 +87,7 @@ def getHoustList(url):
             try:
                 tomxin.tx_mysql.operate(sql)
             except Exception as e:
-                print(e)
+                print("信息详情插入数据库错误，跳过该条数据")
         else:
             content = row[0]
         house = House(title=titleList[i], url=url, content=content)
