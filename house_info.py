@@ -3,6 +3,7 @@ import tomxin.tx_request
 import time
 import tomxin.tx_mysql
 import tomxin.tx_time
+import tomxin.tx_proxy_ip
 
 
 class House(object):
@@ -31,8 +32,16 @@ def open_txt_list(path):
 '''
 获取详情
 '''
-def getDetils(url, ip):
-    html = tomxin.tx_request.get_proxy(url, ip)
+def getDetils(url):
+    while(1):
+        try:
+            ip_list = open_txt_list("ip.txt")
+            ip = ip_list[0]
+            html = tomxin.tx_request.get_proxy(url, ip)
+            break
+        except Exception as e:
+            print("抓取信息详情发生异常，准备重试，错误码：  " + str(e))
+            tomxin.tx_proxy_ip.judge_proxy_ip(url)
     content = tomxin.tx_re.get_first_html_foram(html, 'Conversation.+?text": "', '"name": "')
     return content
 
@@ -43,15 +52,21 @@ def getDetils(url, ip):
 
 
 def getHoustList(url):
-    ip_list = open_txt_list("ip.txt")
-    ip = ip_list[0]
-    html = tomxin.tx_request.get_proxy(url, ip)
+    while(1):
+        try:
+            ip_list = open_txt_list("ip.txt")
+            ip = ip_list[0]
+            html = tomxin.tx_request.get_proxy(url, ip)
+            break
+        except Exception as e:
+            print("抓取列表信息发生异常，准备重试，错误码：  " + str(e))
+            tomxin.tx_proxy_ip.judge_proxy_ip(url)
     info = tomxin.tx_re.get_first(html, '<table class="olt">', '</table>')
     titleList = tomxin.tx_re.get_list(info, 'title="', '"')
     urlList = tomxin.tx_re.get_list(info, 'class="title".+?"', '"')
     i = 0
     houseList = []
-    for url in urlList[:15]:
+    for url in urlList[:]:
         # 如果是pl，代表是置顶的推广
         if url == "pl":
             i += 1
@@ -62,7 +77,7 @@ def getHoustList(url):
         sql = sql.replace("{id}", id)
         row = tomxin.tx_mysql.select(sql)
         if (len(row) == 0):
-            content = getDetils(url,ip)
+            content = getDetils(url)
             sql = "INSERT INTO house (id, title, url, content, add_time) VALUES ('{id}', '{title}','{url}', '{content}', '{add_time}')"
             sql = sql.replace("{id}", id)
             sql = sql.replace("{title}", titleList[i])

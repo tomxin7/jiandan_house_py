@@ -21,6 +21,7 @@ def get(url):
         print(tomxin.tx_time.now_time() + "【普通的get请求异常】get(url) url：" + url)
         raise e#抛出这个异常
 
+
 '''
 有代理ip的get请求
 '''
@@ -30,7 +31,7 @@ def get_proxy(url,ip):
         proxy_support = request.ProxyHandler(proxy)
         opener = request.build_opener(proxy_support)
         opener.addheaders = [('User-Agent',
-                              'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36')]
+                              'User-Agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36')]
         request.install_opener(opener)
         response = request.urlopen(url)
         return response.read().decode("utf-8")
