@@ -38,11 +38,11 @@ def getDetils(url):
             ip_list = open_txt_list("ip.txt")
             ip = ip_list[0]
             html = tomxin.tx_request.get_proxy(url, ip)
+            content = tomxin.tx_re.get_first_html_foram(html, 'Conversation.+?text": "', '"name": "')
             break
         except Exception as e:
             print("抓取信息详情发生异常，准备切换ip")
             tomxin.tx_proxy_ip.judge_proxy_ip(url)
-    content = tomxin.tx_re.get_first_html_foram(html, 'Conversation.+?text": "', '"name": "')
     return content
 
 
@@ -57,13 +57,13 @@ def getHoustList(url):
             ip_list = open_txt_list("ip.txt")
             ip = ip_list[0]
             html = tomxin.tx_request.get_proxy(url, ip)
+            info = tomxin.tx_re.get_first(html, '<table class="olt">', '</table>')
+            titleList = tomxin.tx_re.get_list(info, 'title="', '"')
+            urlList = tomxin.tx_re.get_list(info, 'class="title".+?"', '"')
             break
         except Exception as e:
             print("抓取列表信息发生异常，准备切换ip")
             tomxin.tx_proxy_ip.judge_proxy_ip(url)
-    info = tomxin.tx_re.get_first(html, '<table class="olt">', '</table>')
-    titleList = tomxin.tx_re.get_list(info, 'title="', '"')
-    urlList = tomxin.tx_re.get_list(info, 'class="title".+?"', '"')
     i = 0
     houseList = []
     for url in urlList[:]:

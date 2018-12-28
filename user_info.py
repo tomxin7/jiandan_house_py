@@ -34,7 +34,7 @@ def check_info(houstList, recordList):
                 content_head = content_head.replace("city_remind", record.city_name + "-" + record.key_word)
                 content = content_head + content + content_tail
                 tomxin.tx_mail.retry_simple_mail(msgTo, subject, content)
-                print("邮件发送成功")
+                print(msgTo + "：邮件发送成功")
 
 
 #

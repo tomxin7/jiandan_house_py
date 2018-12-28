@@ -7,6 +7,8 @@ import traceback
 import urllib
 import tomxin.tx_time
 import tomxin.tx_proxy_ip
+import os
+
 
 def houst_main():
     print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + "开始爬取")
@@ -35,6 +37,8 @@ def houst_main():
     if str(time.strftime('%H', time.localtime())) == "22":
         print("晚上10点，程序开始休眠")
         time.sleep(60*60*9)
+        # 清空ip.txt
+        tomxin.tx_proxy_ip.line_write_txt("ip.txt", [])
 
 
 
@@ -43,6 +47,7 @@ sleep_time = 5  # 休息时间（单位分钟）
 project_name = "简单找房"  # 项目名称
 error_num = 0
 if __name__ == '__main__':
+    print(os.getpid())
     print(tomxin.tx_time.now_time() + "【" + project_name + "】启动成功")
     #清空ip.txt
     tomxin.tx_proxy_ip.line_write_txt("ip.txt", [])
