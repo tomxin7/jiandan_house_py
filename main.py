@@ -29,9 +29,9 @@ def houst_main():
         user_info.check_info(houstList, recordList)
 
         print(tomxin.tx_time.now_time() + city +"  爬取成功")
-    print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + "爬取成功，休息4分钟")
-    #休息4分钟
-    time.sleep(4 * 60)
+    print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + "爬取成功，休息30分钟")
+    #休息30分钟
+    time.sleep(30 * 60)
 
     #晚上10点后不再监控
     if str(time.strftime('%H', time.localtime())) == "22":
