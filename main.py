@@ -29,8 +29,6 @@ def houst_main():
     #z找出现在需要爬的城市
     usable_sql = "SELECT DISTINCT city_name from record where `status` = 1"
     usable_city_list = house_info.get_usable_city(usable_sql)
-
-    print(usable_city_list)
     for row in result:
         city = row[0]
         print(tomxin.tx_time.now_time() + city +"  开始爬取")
@@ -68,7 +66,7 @@ if __name__ == '__main__':
     #清空ip.txt
     tomxin.tx_proxy_ip.line_write_txt("ip.txt", [])
     #爬取代理ip
-    # tomxin.tx_proxy_ip.judge_proxy_ip("https://www.douban.com/group/463347/")
+    tomxin.tx_proxy_ip.judge_proxy_ip("https://www.douban.com/group/463347/")
     while (1):
         try:
             houst_main()
