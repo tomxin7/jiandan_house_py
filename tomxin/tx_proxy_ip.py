@@ -3,6 +3,7 @@
 import requests,threading,datetime
 from bs4 import BeautifulSoup
 import random
+import time
 
 #写txt
 def line_write_txt(path, result):
@@ -132,6 +133,9 @@ def getip(targeturl,path):
      diff = gettimediff(start, end)  # 计算耗时
      ips = read(path)  # 读取爬到的ip数量
      print('一共爬取代理ip: %s 个,共耗时: %s \n' % (len(ips), diff))
+     if len(ips) == 0:
+         print("没有可用ip，休眠1小时")
+         time.sleep(60*60)
 
 
 '''

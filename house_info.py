@@ -109,3 +109,11 @@ def getHouse(url_num):
     for url in url_num:
         houstList += getHoustList("https://www.douban.com/group/" + url)
     return houstList
+
+
+def get_usable_city(sql):
+    usable_city_list = []
+    result = tomxin.tx_mysql.select(sql)
+    for row in result:
+        usable_city_list.append(row[0])
+    return usable_city_list

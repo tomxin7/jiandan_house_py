@@ -9,14 +9,37 @@ import tomxin.tx_time
 import tomxin.tx_proxy_ip
 import os
 
+def sleep():
+    # 晚上10点后不再监控
+    if str(time.strftime('%H', time.localtime())) == "22" or str(time.strftime('%H', time.localtime())) == "23":
+        print("晚上10点，程序开始休眠")
+        time.sleep(60 * 60 * 9)
+        # 清空ip.txt
+        tomxin.tx_proxy_ip.line_write_txt("ip.txt", [])
+    else:
+        # 休息20分钟
+        print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + "爬取成功，休息20分钟")
+        time.sleep(20 * 60)
 
 def houst_main():
     print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + "开始爬取")
     sql = "select city_name,dou_ban_url from city"
     result = tomxin.tx_mysql.select(sql)
+
+    #z找出现在需要爬的城市
+    usable_sql = "SELECT DISTINCT city_name from record where `status` = 1"
+    usable_city_list = house_info.get_usable_city(usable_sql)
+
+    print(usable_city_list)
     for row in result:
         city = row[0]
         print(tomxin.tx_time.now_time() + city +"  开始爬取")
+
+        #如果这个城市没有需要发送的用户，那么跳过
+        if city not in usable_city_list:
+            print(tomxin.tx_time.now_time() + city + "  无用户，跳过")
+            continue
+
         url_num = row[1]
 
         # 爬取租房信息
@@ -29,16 +52,9 @@ def houst_main():
         user_info.check_info(houstList, recordList)
 
         print(tomxin.tx_time.now_time() + city +"  爬取成功")
-    print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + "爬取成功，休息30分钟")
-    #休息30分钟
-    time.sleep(30 * 60)
 
-    #晚上10点后不再监控
-    if str(time.strftime('%H', time.localtime())) == "22":
-        print("晚上10点，程序开始休眠")
-        time.sleep(60*60*9)
-        # 清空ip.txt
-        tomxin.tx_proxy_ip.line_write_txt("ip.txt", [])
+        #休眠规则
+        sleep()
 
 
 
@@ -52,7 +68,7 @@ if __name__ == '__main__':
     #清空ip.txt
     tomxin.tx_proxy_ip.line_write_txt("ip.txt", [])
     #爬取代理ip
-    tomxin.tx_proxy_ip.judge_proxy_ip("https://www.douban.com/group/463347/")
+    # tomxin.tx_proxy_ip.judge_proxy_ip("https://www.douban.com/group/463347/")
     while (1):
         try:
             houst_main()

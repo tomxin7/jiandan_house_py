@@ -35,7 +35,9 @@ def check_info(houstList, recordList):
                 content = content_head + content + content_tail
                 tomxin.tx_mail.retry_simple_mail(msgTo, subject, content)
                 print(msgTo + "：邮件发送成功")
+            if record.remind_type == "微信":
 
+                print(123)
 
 #
 # if __name__ == '__main__':
