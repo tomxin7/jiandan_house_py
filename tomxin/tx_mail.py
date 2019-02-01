@@ -24,9 +24,7 @@ smtpPort  # 开放的端口
 sqm  # 在登录smtp时需要login中的密码应当使用授权码而非账户密码
 '''
 mailList = []
-mailList.append(Mail('13450452462@163.com', 'smtp.163.com', '25', 'xing8023'))
-mailList.append(Mail('1341749898@qq.com', 'smtp.qq.com', '25', 'khciyxpskxrcjbfj'))
-mailList.append(Mail('13450452462@qq.com', 'smtp.qq.com', '25', 'jhhybxgsqzuadeec'))
+
 
 
 
@@ -78,7 +76,7 @@ subject：主题
 content：内容
 '''
 def retry_simple_mail(msgTo, subject, content):
-    error_num = 0
+    error_num = 00
     while(error_num < 3):
         try:
             # 去读取一个配置文件
@@ -90,3 +88,8 @@ def retry_simple_mail(msgTo, subject, content):
             write_new_txt("mail_error.txt", str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())) +"  " + mail.msgFrom + " 邮箱异常，错误码：" + str(e))
     return False
 
+# if __name__ == '__main__':
+#     msgTo = "865498311@qq.com"
+#     subject = "50M的这个试一下"
+#     content = "org.jacoco:jacoco-maven-plugin:prepare-agent clean test -Pjava -Ptest -Dsonar.language=java -Dsonar.binaries=target/classes -Dsonar.surefire.reportsPath=target/surefire-reports -Dcobertura.report.format=xml sonar:sonar，看看能不能复现"
+#     retry_simple_mail(msgTo, subject, content)

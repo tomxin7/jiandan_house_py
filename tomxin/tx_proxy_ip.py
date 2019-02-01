@@ -153,7 +153,7 @@ def judge_proxy_ip(url):
 
 
 #-------------------------------------------------------启动-----------------------------------------------------------
-if __name__ == '__main__':
-    path = 'ip.txt' # 存放爬取ip的文档path
-    targeturl = 'https://www.douban.com/group/fuzhou' # 验证ip有效性的指定url
-    getip(targeturl,path)
+# if __name__ == '__main__':
+#     path = 'ip.txt' # 存放爬取ip的文档path
+#     targeturl = 'https://www.douban.com/group/fuzhou' # 验证ip有效性的指定url
+#     getip(targeturl,path)

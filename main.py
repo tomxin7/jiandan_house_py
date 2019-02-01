@@ -63,9 +63,9 @@ error_num = 0
 if __name__ == '__main__':
     print(os.getpid())
     print(tomxin.tx_time.now_time() + "【" + project_name + "】启动成功")
-    #清空ip.txt
+    # 清空ip.txt
     tomxin.tx_proxy_ip.line_write_txt("ip.txt", [])
-    #爬取代理ip
+    # 爬取代理ip
     tomxin.tx_proxy_ip.judge_proxy_ip("https://www.douban.com/group/463347/")
     while (1):
         try:
