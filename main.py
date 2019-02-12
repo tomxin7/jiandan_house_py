@@ -18,8 +18,8 @@ def sleep():
         tomxin.tx_proxy_ip.line_write_txt("ip.txt", [])
     else:
         # 休息20分钟
-        print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + "爬取成功，休息20分钟")
-        time.sleep(20 * 60)
+        print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + "爬取成功，休息30分钟")
+        time.sleep(30 * 60)
 
 def houst_main():
     print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + "开始爬取")
@@ -51,8 +51,8 @@ def houst_main():
 
         print(tomxin.tx_time.now_time() + city +"  爬取成功")
 
-        #休眠规则
-        sleep()
+    #休眠规则
+    sleep()
 
 
 

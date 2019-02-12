@@ -33,6 +33,7 @@ def open_txt_list(path):
 获取详情
 '''
 def getDetils(url):
+    erro_num = 0
     while(1):
         try:
             ip_list = open_txt_list("ip.txt")
@@ -43,15 +44,18 @@ def getDetils(url):
         except Exception as e:
             print("抓取信息详情发生异常，准备切换ip")
             tomxin.tx_proxy_ip.judge_proxy_ip(url)
+            erro_num += 1
+            if(erro_num > 3):
+                break
     return content
 
 
 '''
-获取信息列表
+废弃
+获取信息列表，废弃，暂时不爬取详细信息
 '''
-
-
-def getHoustList(url):
+def getHoustList_feiqi(url):
+    erro_num = 0
     while(1):
         try:
             ip_list = open_txt_list("ip.txt")
@@ -64,6 +68,9 @@ def getHoustList(url):
         except Exception as e:
             print("抓取列表信息发生异常，准备切换ip")
             tomxin.tx_proxy_ip.judge_proxy_ip(url)
+            if (erro_num > 3):
+                break
+    return
     i = 0
     houseList = []
     for url in urlList[:]:
@@ -97,7 +104,32 @@ def getHoustList(url):
         i += 1
     return houseList
 
-
+'''
+获取信息列表，不爬取详细信息
+'''
+def getHoustList(url):
+    erro_num = 0
+    while(1):
+        try:
+            ip_list = open_txt_list("ip.txt")
+            ip = ip_list[0]
+            html = tomxin.tx_request.get_proxy(url, ip)
+            info = tomxin.tx_re.get_first(html, '<table class="olt">', '</table>')
+            titleList = tomxin.tx_re.get_list(info, 'title="', '"')
+            urlList = tomxin.tx_re.get_list(info, 'class="title".+?"', '"')
+            break
+        except Exception as e:
+            print("抓取列表信息发生异常，准备切换ip")
+            tomxin.tx_proxy_ip.judge_proxy_ip(url)
+            if (erro_num > 3):
+                break
+    i = 0
+    houseList = []
+    for url in urlList[:]:
+        house = House(title=titleList[i], url=url, content="")
+        houseList.append(house)
+        i += 1
+    return houseList
 '''
 查询
 '''

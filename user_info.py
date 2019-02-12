@@ -47,7 +47,7 @@ def check_info(houstList, recordList):
                 subject = "【简单找房】" + now_date + "最新房源提醒"
                 content_head = content_head.replace("city_remind", record.city_name + "-" + record.key_word)
                 content = content_head + content + content_tail
-                tomxin.tx_mail.retry_simple_mail(msgTo, subject, content)
+                tomxin.tx_mail.retry_simple_mail_km(msgTo, subject, content)
                 print(msgTo + "：邮件发送成功")
 
             if record.remind_type == "微信":
