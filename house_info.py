@@ -4,6 +4,7 @@ import time
 import tomxin.tx_mysql
 import tomxin.tx_time
 import tomxin.tx_proxy_ip
+import emoji
 
 
 class House(object):
@@ -126,7 +127,10 @@ def getHoustList(url):
     i = 0
     houseList = []
     for url in urlList[:]:
-        house = House(title=titleList[i], url=url, content="")
+        title = titleList[i]
+        #删除emoji表情
+        title = emoji.demojize(str(title))
+        house = House(title=title, url=url, content="")
         houseList.append(house)
         i += 1
     return houseList

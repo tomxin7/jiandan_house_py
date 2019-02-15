@@ -172,3 +172,26 @@ def post_headers(url, value, headers):
     except Exception as e:
         print(tomxin.tx_time.now_time() + "【post请求异常】 post_headers(url, value, headers) url：%s  values:%s  headers:%s"  %(url, value, headers))
         raise e#抛出这个异常
+
+'''
+post请求不带请求头
+url = 'http://jobsky.csu.edu.cn/Home/PartialArticleList'
+values = {
+    'pageindex': '1',
+    'pagesize': '15',
+    'typeid':'4',
+    'followingdates':'-1'
+}
+'''
+def post_not_header(url,values):
+    try:
+        data = urllib.parse.urlencode(values)
+        # that params output from urlencode is encoded to bytes before it is sent to urlopen as data
+        data = data.encode('utf-8')
+        req = urllib.request.Request(url, data)
+        response = urllib.request.urlopen(req)
+        html = response.read()
+        return html.decode('utf-8')
+    except Exception as e:
+        print(tomxin.tx_time.now_time() + "【post请求异常】 post(url,values) url：%s  values:%s"  %(url, values))
+        raise e#抛出这个异常

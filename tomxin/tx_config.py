@@ -12,5 +12,5 @@ config.read(root_path + "/tomxin/base.cfg")
 获取配置
 '''
 def get(section, name):
-    return config.get(section, name)
+    return str(config.get(section, name))
 

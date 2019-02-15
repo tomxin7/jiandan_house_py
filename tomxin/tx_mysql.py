@@ -1,11 +1,12 @@
 import pymysql
 import tomxin.tx_time
+import tomxin.tx_config
 
-db_host = "sql..cn"
-db_user = ""
-db_passwd = "@"
-db_name = ""
-db_charset = "utf8"
+db_host = tomxin.tx_config.get("mysql", "db_host")
+db_user = tomxin.tx_config.get("mysql", "db_user")
+db_passwd = tomxin.tx_config.get("mysql", "db_passwd")
+db_name = tomxin.tx_config.get("mysql", "db_name")
+db_charset = tomxin.tx_config.get("mysql", "db_charset")
 
 '''
    for row in results:
@@ -16,6 +17,7 @@ db_charset = "utf8"
       income = row[4]
 '''
 def select(selectSql):
+
     try:
         db = pymysql.connect(user=db_user, passwd=db_passwd, host=db_host, db=db_name, charset=db_charset)
         cursor = db.cursor()
@@ -63,7 +65,7 @@ def operate(insertSql):
         # 提交到数据库执行
         db.commit()
     except Exception as e:
-        print(tomxin.tx_time.now_time() + "【操作数据出错】exception SQL：" + insertSql)
+        # print(tomxin.tx_time.now_time() + "【操作数据出错】exception SQL：" + insertSql)
         raise e
     finally:
         # 关闭数据库连接

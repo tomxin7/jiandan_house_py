@@ -3,6 +3,8 @@ import email.mime.multipart
 import email.mime.text
 import random
 import time
+import tomxin.tx_request
+import tomxin.tx_config
 class Mail(object):
     msgFrom = ""
     smtpSever = ""
@@ -24,6 +26,8 @@ smtpPort  # 开放的端口
 sqm  # 在登录smtp时需要login中的密码应当使用授权码而非账户密码
 '''
 mailList = []
+mailList.append(Mail('jiandan@tomxin.cn', 'smtp.qq.com', '587', ''))
+# mailList.append(Mail('17731964024@163.com', 'smtp.163.com', '25', ''))
 
 
 
@@ -76,7 +80,7 @@ subject：主题
 content：内容
 '''
 def retry_simple_mail(msgTo, subject, content):
-    error_num = 00
+    error_num = 0
     while(error_num < 3):
         try:
             # 去读取一个配置文件
@@ -88,8 +92,58 @@ def retry_simple_mail(msgTo, subject, content):
             write_new_txt("mail_error.txt", str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())) +"  " + mail.msgFrom + " 邮箱异常，错误码：" + str(e))
     return False
 
-# if __name__ == '__main__':
-#     msgTo = "865498311@qq.com"
-#     subject = "50M的这个试一下"
-#     content = "org.jacoco:jacoco-maven-plugin:prepare-agent clean test -Pjava -Ptest -Dsonar.language=java -Dsonar.binaries=target/classes -Dsonar.surefire.reportsPath=target/surefire-reports -Dcobertura.report.format=xml sonar:sonar，看看能不能复现"
-#     retry_simple_mail(msgTo, subject, content)
+'''
+调用凯闽邮件发送接口，简单邮件
+'''
+def send_simple_mail_km(msgTo, subject, content):
+    account = tomxin.tx_config.get("mail","account")
+    password = tomxin.tx_config.get("mail","password")
+    value = {
+        "receiver": msgTo,
+        "mail_subject": subject,
+        "mail_content": content,
+        "smtp_config": {
+            "host": "smtp.qq.com",
+            "port": 587,
+            "account": account,
+            "password": password,
+            "display_name": "简单提醒"
+	    }
+    }
+
+    url = "http://api.keminl.cn/g/api/1d26212ab2b4bf4a703fa889a86b365c/SendMail"
+    tomxin.tx_request.post_json(url, value)
+
+
+'''
+调用凯闽邮件发送接口，模板邮件
+'''
+def send_template_mail_km(msgTo, templet_code, task, subject, url):
+    account = tomxin.tx_config.get("mail","account")
+    password = tomxin.tx_config.get("mail","password")
+    value = {
+            "templet_code": templet_code,
+            "receiver": msgTo,
+            "mail_subject": subject,
+            "templet_data": {
+                "task": task,
+                "url": url
+
+            },
+            "delevop_id": "1524873977",
+            "smtp_config": {
+                "host": "smtp.qq.com",
+                "port": 587,
+                "account": account,
+                "password": password,
+                "display_name": "简单提醒"
+            }
+        }
+
+
+    url = "http://api.keminl.cn/g/api/1d26212ab2b4bf4a703fa889a86b365c/SendMailByTemplet"
+    tomxin.tx_request.post_json(url, value)
+
+
+
+
