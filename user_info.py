@@ -24,7 +24,7 @@ def check_info(houstList, recordList):
                     if len(s_row) == 0:
                         flag = 1
                         info = {}
-                        info['title'] = houst.title
+                        info['title'] = houst.title.replace("\\","")
                         info['url'] = houst.url
                         info_list.append(info)
                         #插入已发送标识
