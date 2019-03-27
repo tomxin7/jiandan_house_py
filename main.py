@@ -8,6 +8,7 @@ import urllib
 import tomxin.tx_time
 import tomxin.tx_proxy_ip
 import os
+import tomxin.base
 
 def sleep():
     # 晚上10点后不再监控
@@ -51,6 +52,7 @@ def houst_main():
 
         print(tomxin.tx_time.now_time() + city +"  爬取成功")
 
+    tomxin.base.update_status("正常运行")
     #休眠规则
     sleep()
 
@@ -81,6 +83,7 @@ if __name__ == '__main__':
             message = message.replace("{log_code}", str(int(time.time())))
             print(tomxin.tx_time.now_time() + message)
             print(traceback.format_exc())
+            tomxin.base.update_status(message)
             message = urllib.parse.quote(message)
             url = "http://wxmsg.dingliqc.com/send?msg=" + message + "&userIds=orPQ808n2X4vtf-1cIihSnbHqisoITWXlbsk3I"
             tomxin.tx_request.get(url)
