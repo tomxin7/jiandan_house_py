@@ -111,7 +111,8 @@ def send_simple_mail_km(msgTo, subject, content):
 	    }
     }
 
-    url = "http://api.keminl.cn/g/api/1d26212ab2b4bf4a703fa889a86b365c/SendMail"
+    # url = "http://api.keminl.cn/g/api/1d26212ab2b4bf4a703fa889a86b365c/SendMail"
+    url = "https://api.keminl.cn/1d26212ab2b4bf4a703fa889a86b365c/cgi/mail/tpl/send"
     tomxin.tx_request.post_json(url, value)
 
 
@@ -130,7 +131,7 @@ def send_template_mail_km(msgTo, templet_code, task, subject, url):
                 "url": url
 
             },
-            "delevop_id": "1524873977",
+            "smtp_id": "98915b47-3ba2-439a-8077-f0440fb095ae",
             "smtp_config": {
                 "host": "smtp.qq.com",
                 "port": 587,
