@@ -142,7 +142,8 @@ def send_template_mail_km(msgTo, templet_code, task, subject, url):
         }
 
 
-    url = "http://api.keminl.cn/g/api/1d26212ab2b4bf4a703fa889a86b365c/SendMailByTemplet"
+    # url = "http://api.keminl.cn/g/api/1d26212ab2b4bf4a703fa889a86b365c/SendMailByTemplet"
+    url = "https://api.keminl.cn/1d26212ab2b4bf4a703fa889a86b365c/cgi/mail/tpl/send"
     tomxin.tx_request.post_json(url, value)
 
 
