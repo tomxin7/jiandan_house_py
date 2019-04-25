@@ -34,6 +34,7 @@ def get_proxy(url,ip):
                               'User-Agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36')]
         request.install_opener(opener)
         response = request.urlopen(url)
+        opener.close()
         return response.read().decode("utf-8")
     except Exception as e:
         print(tomxin.tx_time.now_time() + "【get请求异常】get_proxy(url,ip) url：%s  ip:%s"  %(url, ip))

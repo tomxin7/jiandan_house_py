@@ -92,36 +92,14 @@ def retry_simple_mail(msgTo, subject, content):
             write_new_txt("mail_error.txt", str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())) +"  " + mail.msgFrom + " 邮箱异常，错误码：" + str(e))
     return False
 
-'''
-调用凯闽邮件发送接口，简单邮件
-'''
-def send_simple_mail_km(msgTo, subject, content):
-    account = tomxin.tx_config.get("mail","account")
-    password = tomxin.tx_config.get("mail","password")
-    value = {
-        "receiver": msgTo,
-        "mail_subject": subject,
-        "mail_content": content,
-        "smtp_config": {
-            "host": "smtp.qq.com",
-            "port": 587,
-            "account": account,
-            "password": password,
-            "display_name": "简单提醒"
-	    }
-    }
-
-    # url = "http://api.keminl.cn/g/api/1d26212ab2b4bf4a703fa889a86b365c/SendMail"
-    url = "https://api.keminl.cn/1d26212ab2b4bf4a703fa889a86b365c/cgi/mail/tpl/send"
-    tomxin.tx_request.post_json(url, value)
-
 
 '''
 调用凯闽邮件发送接口，模板邮件
 '''
+import requests
 def send_template_mail_km(msgTo, templet_code, task, subject, url):
-    account = tomxin.tx_config.get("mail","account")
-    password = tomxin.tx_config.get("mail","password")
+    smtp_id = tomxin.tx_config.get("mail", "smtp_id")
+    host_url = tomxin.tx_config.get("mail", "url")
     value = {
             "templet_code": templet_code,
             "receiver": msgTo,
@@ -131,20 +109,12 @@ def send_template_mail_km(msgTo, templet_code, task, subject, url):
                 "url": url
 
             },
-            "smtp_id": "98915b47-3ba2-439a-8077-f0440fb095ae",
-            "smtp_config": {
-                "host": "smtp.qq.com",
-                "port": 587,
-                "account": account,
-                "password": password,
-                "display_name": "简单提醒"
-            }
+            "smtp_id": smtp_id
         }
 
 
-    # url = "http://api.keminl.cn/g/api/1d26212ab2b4bf4a703fa889a86b365c/SendMailByTemplet"
-    url = "https://api.keminl.cn/1d26212ab2b4bf4a703fa889a86b365c/cgi/mail/tpl/send"
-    tomxin.tx_request.post_json(url, value)
+    requests.post(url=host_url, json=value)
+    # tomxin.tx_request.post_json(url, value)
 
 
 
